@@ -288,9 +288,6 @@ export function ContactPanel() {
               Request a walkthrough
               <Icons.arrow className="h-4 w-4" />
             </button>
-            <p className="text-center text-[0.68rem] text-ink-400">
-              Opens in your own email client. This page has no backend and transmits nothing itself.
-            </p>
           </form>
         )}
       </div>
