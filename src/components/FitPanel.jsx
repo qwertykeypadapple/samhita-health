@@ -1,19 +1,24 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /**
- * Scales a face's panel down just enough to fit the viewport, so a face never
- * needs scrolling. Transforms don't affect layout, so the child's scrollHeight
- * stays the natural height and can be measured while a scale is applied.
+ * Nudges a face's panel down to fit the viewport, and lets the panel scroll for
+ * whatever is left over. Transforms don't affect layout, so the child's
+ * scrollHeight stays the natural height and can be measured while a scale is
+ * applied.
  *
  * Width is deliberately left at 100%: widening the child as it shrinks would
  * change its height, which would change the scale, which would change the
  * height again. Fixed width keeps the calculation a one-shot.
  */
-const MIN = 0.68
 
-/* Below this the layout has stacked into one column and no sane scale would
-   fit it. Phones keep full-size type and scroll the panel instead; the
-   fit-to-face rule is a desktop one. */
+/* Only a gentle shrink. Enough to absorb a small overshoot so a panel that is
+   a few pixels too tall still reads as one screen, but not so much that body
+   copy becomes unreadable: past this, scrolling is the better trade. */
+const MIN = 0.9
+
+/* Below this the layout has stacked into one column and no scale would fit it.
+   Phones keep full-size type and scroll, which is the expected gesture there
+   anyway; fitting is a desktop nicety. */
 const FIT_ABOVE = 900
 
 export default function FitPanel({ children, deps }) {
@@ -70,10 +75,20 @@ export default function FitPanel({ children, deps }) {
     ro.observe(o)
     ro.observe(i)
     window.addEventListener('resize', measure)
+    window.addEventListener('orientationchange', settle)
+
+    /* Crossing the fit/scroll breakpoint is a mode switch, so drive it off the
+       media query itself rather than hoping a resize event lands. Without this
+       a phone can keep a stale scale from a wider layout. */
+    const mq = window.matchMedia(`(min-width: ${FIT_ABOVE}px)`)
+    mq.addEventListener('change', settle)
+
     document.fonts?.ready.then(settle).catch(() => {})
     return () => {
       ro.disconnect()
       window.removeEventListener('resize', measure)
+      window.removeEventListener('orientationchange', settle)
+      mq.removeEventListener('change', settle)
     }
   }, [measure, settle])
 

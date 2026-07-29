@@ -45,15 +45,21 @@ Each face is linkable: `/#why`, `/#how`, `/#compliance`, `/#impact`.
   turning forward instead of spinning back three quarters.
 - `.panel-scroll` uses `align-content: safe center`: panels centre when they fit and fall back
   to top-aligned if a short viewport forces a scroll, so content is never pushed out of reach.
-- `FitPanel` is what actually enforces "no scrolling": it measures the panel's natural height
-  against the space the face has left and scales it down just enough to fit, floor 0.68. A
-  transform doesn't affect layout, so `scrollHeight` stays the natural height and can be read
-  while a scale is applied. Width is deliberately not compensated, because widening the child as it
-  shrinks would change its height, which would change the scale, which would loop.
-  It measures across three frames after any tab change or webfont swap, because either can
-  re-wrap the header tabs and change the space available.
-- Below 900px wide, fitting is switched off: the layout has stacked to one column by then and no
-  sane scale would fit it, so phones keep full-size type and scroll the panel instead.
+- `FitPanel` keeps a face close to one screen without making it unreadable: it measures the
+  panel's natural height against the space the face has left and shrinks it at most to 0.9,
+  then lets the panel scroll for whatever is left over. A transform doesn't affect layout, so
+  `scrollHeight` stays the natural height and can be read while a scale is applied. Width is
+  deliberately not compensated, because widening the child as it shrinks would change its height,
+  which would change the scale, which would loop. It measures across three frames after any tab
+  change or webfont swap, because either can re-wrap the header tabs and change the space
+  available.
+- Below 900px wide, fitting is switched off entirely: the layout has stacked to one column by then
+  and no scale would fit it, so phones keep full-size type and scroll, which is the expected
+  gesture there anyway. That mode switch is driven off a `matchMedia` listener rather than the
+  resize event, so a phone can't keep a stale scale from a wider layout.
+- Scrolling and swiping coexist: drags are axis-locked on first movement, so a vertical gesture
+  scrolls the panel and a horizontal one turns the cube. `touch-action: pan-y` on the stage lets
+  the browser handle vertical touch scrolling natively.
 - Panels are laid out wide rather than tall wherever possible (multi-column obligation lists, a
   horizontal instrument selector). A wider measure means fewer wrapped lines, which is what
   keeps a face inside a short viewport without heavy scaling.
