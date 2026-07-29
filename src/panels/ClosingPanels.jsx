@@ -107,11 +107,34 @@ const AGENDA = [
   'A realistic pilot scope, cost and timeline, or an honest no',
 ]
 
+const CONTACT_EMAIL = 'qwertykeypadapple@gmail.com'
+
 export function ContactPanel() {
   const [sent, setSent] = useState(false)
 
   const field =
     'mt-1.5 w-full rounded-lg border border-ink-200 bg-paper px-3 py-2 text-[0.84rem] text-ink-900 outline-none transition placeholder:text-ink-300 focus:border-signal-500 focus:bg-white'
+
+  /* No backend, so the form composes the enquiry and hands it to the visitor's
+     own mail client. Nothing is transmitted by the page itself. */
+  const submit = (e) => {
+    e.preventDefault()
+    const el = e.currentTarget.elements
+    const v = (id) => (el[id]?.value || '').trim()
+    const subject = `Walkthrough request${v('org') ? `: ${v('org')}` : ''}`
+    const body = [
+      `Name: ${v('name')}`,
+      `Role: ${v('role')}`,
+      `Hospital or institution: ${v('org')}`,
+      `Work email: ${v('email')}`,
+      `Approximate bed count: ${v('beds')}`,
+      '',
+      'Clinical question:',
+      v('msg') || '(not specified)',
+    ].join('\n')
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    setSent(true)
+  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.85fr]">
@@ -131,6 +154,16 @@ export function ContactPanel() {
         </ul>
 
         <div className="mt-5 border-t border-ink-200 pt-4">
+          <div className="eyebrow text-ink-400">Get in touch</div>
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Samhita: walkthrough request')}`}
+            className="mt-2 inline-flex items-center gap-2 font-mono text-[0.9rem] font-medium text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
+          >
+            {CONTACT_EMAIL}
+          </a>
+        </div>
+
+        <div className="mt-4 border-t border-ink-200 pt-4">
           <div className="eyebrow text-ink-400">Also available</div>
           <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[0.83rem] text-ink-700">
             <span>Template consortium agreement</span>
@@ -180,24 +213,23 @@ export function ContactPanel() {
             <div className="grid h-12 w-12 place-items-center rounded-full bg-signal-300/25 text-signal-700">
               <Icons.check className="h-6 w-6" />
             </div>
-            <h3 className="font-serif mt-4 text-[1.3rem] text-ink-900">Nothing was actually sent.</h3>
-            <p className="mt-2.5 max-w-[36ch] text-[0.84rem] leading-relaxed text-ink-600">
-              This is a demonstration site with no backend, so your details stayed in your browser and were not transmitted
-              anywhere. On a live deployment this would reach the partnerships team.
+            <h3 className="font-serif mt-4 text-[1.3rem] text-ink-900">Your email client should be open.</h3>
+            <p className="mt-2.5 max-w-[38ch] text-[0.84rem] leading-relaxed text-ink-600">
+              The enquiry has been composed for you to review and send. Nothing was transmitted by this page. If nothing
+              opened, write to us directly:
             </p>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-3 font-mono text-[0.86rem] font-medium text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
+            >
+              {CONTACT_EMAIL}
+            </a>
             <button data-nodrag onClick={() => setSent(false)} className="btn-ghost mt-5 !py-2 !px-4 !text-[0.76rem]">
               Back to the form
             </button>
           </div>
         ) : (
-          <form
-            data-nodrag
-            onSubmit={(e) => {
-              e.preventDefault()
-              setSent(true)
-            }}
-            className="space-y-3"
-          >
+          <form data-nodrag onSubmit={submit} className="space-y-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label htmlFor="name" className="text-[0.75rem] font-semibold text-ink-700">
@@ -253,7 +285,7 @@ export function ContactPanel() {
               <Icons.arrow className="h-4 w-4" />
             </button>
             <p className="text-center text-[0.68rem] text-ink-400">
-              Demonstration site: this form has no backend and transmits nothing.
+              Opens in your own email client. This page has no backend and transmits nothing itself.
             </p>
           </form>
         )}
