@@ -107,189 +107,80 @@ const AGENDA = [
   'A realistic pilot scope, cost and timeline, or an honest no',
 ]
 
+const SOURCES = [
+  ['DPDP Act & Rules · MeitY', 'https://www.meity.gov.in/data-protection-framework'],
+  ['ABDM policies · NHA', 'https://abdm.gov.in/publications/policies_regulations'],
+  [
+    'ICMR AI ethics',
+    'https://www.icmr.gov.in/ethical-guidelines-for-application-of-artificial-intelligence-in-biomedical-research-and-healthcare',
+  ],
+  ['CDSCO medical devices', 'https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/Medical-Device-Diagnostics/'],
+]
+
 const CONTACT_EMAIL = 'qwertykeypadapple@gmail.com'
 
+/* No form and no backend: the single call to action hands off to the visitor's
+   own mail client. The address is carried in the href only, never printed. */
 export function ContactPanel() {
-  const [sent, setSent] = useState(false)
-
-  const field =
-    'mt-1.5 w-full rounded-lg border border-ink-200 bg-paper px-3 py-2 text-[0.84rem] text-ink-900 outline-none transition placeholder:text-ink-300 focus:border-signal-500 focus:bg-white'
-
-  /* No backend, so the form composes the enquiry and hands it to the visitor's
-     own mail client. Nothing is transmitted by the page itself. */
-  const submit = (e) => {
-    e.preventDefault()
-    const el = e.currentTarget.elements
-    const v = (id) => (el[id]?.value || '').trim()
-    const subject = `Walkthrough request${v('org') ? `: ${v('org')}` : ''}`
-    const body = [
-      `Name: ${v('name')}`,
-      `Role: ${v('role')}`,
-      `Hospital or institution: ${v('org')}`,
-      `Work email: ${v('email')}`,
-      `Approximate bed count: ${v('beds')}`,
-      '',
-      'Clinical question:',
-      v('msg') || '(not specified)',
-    ].join('\n')
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
-  }
-
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_0.85fr]">
+    <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr] lg:gap-10">
       <div>
-        <p className="max-w-[52ch] text-[0.94rem] leading-[1.7] text-ink-600">
+        <p className="max-w-[52ch] text-[0.96rem] leading-[1.7] text-ink-600">
           A ninety-minute walkthrough with your data protection, IT and clinical research leads in the same room. No
           slideware; we work through your actual constraints and tell you whether this fits.
         </p>
 
-        <ul className="mt-5 space-y-2.5">
+        <ul className="mt-6 space-y-3">
           {AGENDA.map((a) => (
-            <li key={a} className="flex gap-2.5">
+            <li key={a} className="flex gap-3">
               <Icons.check className="mt-0.5 h-4 w-4 shrink-0 text-signal-600" />
-              <span className="text-[0.86rem] leading-relaxed text-ink-700">{a}</span>
+              <span className="text-[0.9rem] leading-relaxed text-ink-700">{a}</span>
             </li>
           ))}
         </ul>
 
-        <div className="mt-5 border-t border-ink-200 pt-4">
-          <div className="eyebrow text-ink-400">Get in touch</div>
-          {/* The address is carried in the href only, never printed, so it is
-              not sitting on the page for scrapers or casual readers. */}
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Samhita: walkthrough request')}`}
-            className="mt-2 inline-flex items-center gap-2 text-[0.9rem] font-semibold text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
-          >
-            Email us directly
-            <Icons.arrow className="h-3.5 w-3.5" />
-          </a>
-        </div>
+        <a
+          href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Samhita: walkthrough request')}`}
+          className="btn-primary mt-7"
+        >
+          Email us to arrange one
+          <Icons.arrow className="h-4 w-4" />
+        </a>
 
-        <div className="mt-4 border-t border-ink-200 pt-4">
+        <div className="mt-7 border-t border-ink-200 pt-4">
           <div className="eyebrow text-ink-400">Also available</div>
-          <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[0.83rem] text-ink-700">
+          <div className="mt-2.5 flex flex-wrap gap-x-6 gap-y-1 text-[0.86rem] text-ink-700">
             <span>Template consortium agreement</span>
             <span>DPIA template for federated training</span>
             <span>IEC submission pack</span>
           </div>
         </div>
-
-        <div className="mt-5 rounded-lg border border-statute-300/60 bg-statute-300/10 p-4">
-          <div className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-statute-700">
-            Important: not legal advice
-          </div>
-          <p className="mt-2 max-w-[80ch] text-[0.74rem] leading-relaxed text-ink-600">
-            The regulatory content here is an informational summary for hospital DPOs, IT leaders and ethics committees.
-            It is not legal advice. Indian data protection law is mid-transition: the DPDP Rules were notified on 13
-            November 2025, substantive obligations commence on 13 May 2027, and further Government notifications,
-            including categories of data subject to localisation, are expected in between. Verify every provision against
-            the primary instrument and engage counsel for your deployment.
-          </p>
-          <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[0.72rem]">
-            {[
-              ['DPDP Act & Rules · MeitY', 'https://www.meity.gov.in/data-protection-framework'],
-              ['ABDM policies · NHA', 'https://abdm.gov.in/publications/policies_regulations'],
-              [
-                'ICMR AI ethics',
-                'https://www.icmr.gov.in/ethical-guidelines-for-application-of-artificial-intelligence-in-biomedical-research-and-healthcare',
-              ],
-              ['CDSCO medical devices', 'https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/Medical-Device-Diagnostics/'],
-            ].map(([l, h]) => (
-              <a
-                key={l}
-                href={h}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="font-semibold text-ink-600 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
-              >
-                {l} ↗
-              </a>
-            ))}
-          </div>
-        </div>
       </div>
 
-      <div className="card p-5 md:p-6">
-        {sent ? (
-          <div className="flex h-full min-h-[300px] flex-col items-center justify-center text-center">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-signal-300/25 text-signal-700">
-              <Icons.check className="h-6 w-6" />
-            </div>
-            <h3 className="font-serif mt-4 text-[1.3rem] text-ink-900">Your email client should be open.</h3>
-            <p className="mt-2.5 max-w-[38ch] text-[0.84rem] leading-relaxed text-ink-600">
-              The enquiry has been composed for you to review and send. Nothing was transmitted by this page. If nothing
-              opened, use the link below.
-            </p>
+      <div className="rounded-xl border border-statute-300/60 bg-statute-300/10 p-5 lg:self-start">
+        <div className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-statute-700">
+          Important: not legal advice
+        </div>
+        <p className="mt-2.5 text-[0.8rem] leading-relaxed text-ink-600">
+          The regulatory content here is an informational summary for hospital DPOs, IT leaders and ethics committees.
+          It is not legal advice. Indian data protection law is mid-transition: the DPDP Rules were notified on 13
+          November 2025, substantive obligations commence on 13 May 2027, and further Government notifications,
+          including categories of data subject to localisation, are expected in between. Verify every provision against
+          the primary instrument and engage counsel for your deployment.
+        </p>
+        <div className="mt-4 grid gap-1.5 border-t border-statute-300/50 pt-3.5 text-[0.76rem]">
+          {SOURCES.map(([l, h]) => (
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="mt-3 inline-flex items-center gap-2 text-[0.86rem] font-semibold text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
+              key={l}
+              href={h}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="font-semibold text-ink-600 underline decoration-ink-300 underline-offset-2 hover:text-ink-900"
             >
-              Open your email client
-              <Icons.arrow className="h-3.5 w-3.5" />
+              {l} ↗
             </a>
-            <button data-nodrag onClick={() => setSent(false)} className="btn-ghost mt-5 !py-2 !px-4 !text-[0.76rem]">
-              Back to the form
-            </button>
-          </div>
-        ) : (
-          <form data-nodrag onSubmit={submit} className="space-y-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label htmlFor="name" className="text-[0.75rem] font-semibold text-ink-700">
-                  Your name
-                </label>
-                <input id="name" required placeholder="Dr. A. Sharma" className={field} />
-              </div>
-              <div>
-                <label htmlFor="role" className="text-[0.75rem] font-semibold text-ink-700">
-                  Role
-                </label>
-                <input id="role" required placeholder="Medical Superintendent" className={field} />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="org" className="text-[0.75rem] font-semibold text-ink-700">
-                Hospital or institution
-              </label>
-              <input id="org" required placeholder="Name of your hospital" className={field} />
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label htmlFor="email" className="text-[0.75rem] font-semibold text-ink-700">
-                  Work email
-                </label>
-                <input id="email" type="email" required placeholder="you@hospital.org" className={field} />
-              </div>
-              <div>
-                <label htmlFor="beds" className="text-[0.75rem] font-semibold text-ink-700">
-                  Approximate bed count
-                </label>
-                <select id="beds" className={field}>
-                  <option>Under 100</option>
-                  <option>100–300</option>
-                  <option>300–750</option>
-                  <option>750+</option>
-                  <option>Network of hospitals</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="msg" className="text-[0.75rem] font-semibold text-ink-700">
-                What clinical question are you trying to answer?
-              </label>
-              <textarea id="msg" rows={3} placeholder="Optional: the more specific, the better the first call." className={`${field} resize-none`} />
-            </div>
-
-            <button type="submit" className="btn-primary w-full !py-2.5">
-              Request a walkthrough
-              <Icons.arrow className="h-4 w-4" />
-            </button>
-          </form>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   )
