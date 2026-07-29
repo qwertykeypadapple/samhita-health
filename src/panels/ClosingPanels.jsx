@@ -155,11 +155,14 @@ export function ContactPanel() {
 
         <div className="mt-5 border-t border-ink-200 pt-4">
           <div className="eyebrow text-ink-400">Get in touch</div>
+          {/* The address is carried in the href only, never printed, so it is
+              not sitting on the page for scrapers or casual readers. */}
           <a
             href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Samhita: walkthrough request')}`}
-            className="mt-2 inline-flex items-center gap-2 font-mono text-[0.9rem] font-medium text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
+            className="mt-2 inline-flex items-center gap-2 text-[0.9rem] font-semibold text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
           >
-            {CONTACT_EMAIL}
+            Email us directly
+            <Icons.arrow className="h-3.5 w-3.5" />
           </a>
         </div>
 
@@ -216,13 +219,14 @@ export function ContactPanel() {
             <h3 className="font-serif mt-4 text-[1.3rem] text-ink-900">Your email client should be open.</h3>
             <p className="mt-2.5 max-w-[38ch] text-[0.84rem] leading-relaxed text-ink-600">
               The enquiry has been composed for you to review and send. Nothing was transmitted by this page. If nothing
-              opened, write to us directly:
+              opened, use the link below.
             </p>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="mt-3 font-mono text-[0.86rem] font-medium text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
+              className="mt-3 inline-flex items-center gap-2 text-[0.86rem] font-semibold text-ink-900 underline decoration-signal-400 decoration-2 underline-offset-4 hover:text-signal-700"
             >
-              {CONTACT_EMAIL}
+              Open your email client
+              <Icons.arrow className="h-3.5 w-3.5" />
             </a>
             <button data-nodrag onClick={() => setSent(false)} className="btn-ghost mt-5 !py-2 !px-4 !text-[0.76rem]">
               Back to the form
