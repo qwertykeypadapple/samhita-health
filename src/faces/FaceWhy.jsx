@@ -11,7 +11,7 @@ const TABS = [
 const PAINS = [
   {
     icon: Icons.users,
-    title: 'Your cohort is too small, and always will be',
+    title: 'Your cohort is too small, and may take time to grow',
     body:
       'A 500-bed hospital may log 40 confirmed cases of a rare presentation in a decade. No architecture search rescues a model from n=40. The constraint is epidemiological, not computational.',
   },
